@@ -1,0 +1,4 @@
+Used for understanding geolocation!
+
+https://thedatafrog.com/en/articles/show-data-google-map-python/
+https://www.freecodecamp.org/news/how-to-get-location-information-of-ip-address-using-python/
