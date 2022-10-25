@@ -6,6 +6,7 @@ Optional goals include, events for bussinesses etc. based on range. A 'What's on
 **Posting**, liking, commenting, deleting. Commented and liked comments saved undertabs to return to.<br>
 **Region Content**, anyone within Dublin can see the what's on in that region.<br>
 **User IMs**, liking messages, deleting, etc. <br>
+**Android Version**, ability to use on a phone. <br>
 
 
 
