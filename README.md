@@ -11,7 +11,7 @@ Optional goals include, events for bussinesses etc. based on range. A 'What's on
 
 
 ## Platforms, databases and languages being used:
-HTML, Bootstrap 5
+HTML, Bootstrap 5 <br>
 Python, Django <br>
 Javascript, Vue.js<br>
 MySQL<br>
