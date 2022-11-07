@@ -29,6 +29,7 @@ class UserPost(models.Model):
         default=uuid.uuid4
         editable=False
     )
+    posttype = models.ForeignKey(UserPost, on_delete=models.CASCADE)
     text = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to="userPost", blank=True)
     likes = models.DecimalField(black=True)
