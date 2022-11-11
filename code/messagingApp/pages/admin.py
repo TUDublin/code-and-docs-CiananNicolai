@@ -7,6 +7,6 @@ class PostTypeAdmin(admin.ModelAdmin):
 admin.site.register(PostType, PostTypeAdmin)
 
 class UserPostAdmin(admin.ModelAdmin):
-    list_display = ['posttype', 'text', 'image','likes','comments','postType','edited']
+    list_display = ['posttype','author', 'text', 'image','likes','comments','edited']
 
-admin.site.register(UserType, UserPostAdmin)
+admin.site.register(UserPost, UserPostAdmin)

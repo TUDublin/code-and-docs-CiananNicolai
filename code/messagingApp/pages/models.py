@@ -1,14 +1,14 @@
 import uuid
+from accounts.models import CustomUser
 from django.db import models
 from django.urls import reverse
 
 
 class PostType(models.Model):
-        id = models.UUIDField(
-        primary_key=True
-        default=uuid.uuid4
-        editable=False
-    )
+    id = models.UUIDField(
+        primary_key=True,
+        default= uuid.uuid4,
+        editable=False)
     name = models.CharField(max_length=250, unique=True)
 
     class Meta:
@@ -25,20 +25,21 @@ class PostType(models.Model):
 
 class UserPost(models.Model):
     id = models.UUIDField(
-        primary_key=True
-        default=uuid.uuid4
+        primary_key=True,
+        default=uuid.uuid4,
         editable=False
     )
-    posttype = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+    posttype = models.ForeignKey(PostType, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete= models.CASCADE,related_name='blog_posts')
     text = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to="userPost", blank=True)
-    likes = models.DecimalField(black=True)
-    comments = models.DecimalField(black=True)
-    postTime = models.DateTimeField(auto_now_add=True, black=True, null=True)
-    edited = models.DateTimeField(auto_now_add=True, black=True, null=True)
+    likes = models.DecimalField(blank=True,max_digits=9999999,decimal_places=0)
+    comments = models.CharField(blank=True, max_length=250)
+    postTime = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    edited = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     class Meta:
-        ordering =('text',)
+        ordering =('-postTime',)
         verbose_name = 'post'
         verbose_name_plural ="posts"
     
@@ -46,4 +47,4 @@ class UserPost(models.Model):
         return reverse('pages:post detail', args=[self.posttype.id, self.id])
 
     def __str__(self):
-        return self.name
+        return self.text
