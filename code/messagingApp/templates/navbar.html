@@ -23,6 +23,26 @@
               <li><a class="dropdown-item" href="#">Another action</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <ul>
+                {% if user.is_authenticated %}
+                <li>
+                          Welcome, <a href="#" class="dropdown-toggle" data-toggle="dropdown" 
+                          aria-haspopup="true" aria-expanded="false">{{ user.username }} 
+                          <i class="fas fa-user-circle"></i></a>
+                </li>
+                <li>
+                  <a href="">Sign Out <i class="fas fa-sign-out-alt"></i></a>
+                </li>
+                {% else %}
+                <li>
+                  <a href="{% url 'signup' %}">Sign Up <i class="fas fa-user-plus"></i></a>
+                </li>
+                <li>
+                  <a href="{% url 'signin' %}">Sign In <i class="fas fa-sign-in-alt"></i></a>
+                </li>
+                {% endif %}
+              </ul>
+          
             </ul>
           </li>
           <li class="nav-item">
