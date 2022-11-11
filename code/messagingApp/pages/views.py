@@ -4,5 +4,5 @@ from django.shortcuts import render
 
 
 class HomePageView(TemplateView):
-    template_name = 'home.html'
+    template_name = 'base.html'
 

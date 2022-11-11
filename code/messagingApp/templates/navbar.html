@@ -19,11 +19,7 @@
               Dropdown
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-              <ul>
+
                 {% if user.is_authenticated %}
                 <li>
                           Welcome, <a href="#" class="dropdown-toggle" data-toggle="dropdown" 
@@ -31,7 +27,7 @@
                           <i class="fas fa-user-circle"></i></a>
                 </li>
                 <li>
-                  <a href="">Sign Out <i class="fas fa-sign-out-alt"></i></a>
+                  <a href="{% url 'signout' %}">Sign Out <i class="fas fa-sign-out-alt"></i></a>
                 </li>
                 {% else %}
                 <li>
