@@ -2,13 +2,14 @@ import uuid
 from accounts.models import CustomUser
 from django.db import models
 from django.urls import reverse
+from django.conf import settings
 
 
 class PostType(models.Model):
     id = models.UUIDField(
         primary_key=True,
         default= uuid.uuid4,
-        editable=False)
+        editable=False),
     name = models.CharField(max_length=250, unique=True)
 
     class Meta:
@@ -30,7 +31,7 @@ class UserPost(models.Model):
         editable=False
     )
     posttype = models.ForeignKey(PostType, on_delete=models.CASCADE)
-    author = models.ForeignKey(CustomUser, on_delete= models.CASCADE,related_name='blog_posts')
+    username = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     text = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to="userPost", blank=True)
     likes = models.DecimalField(blank=True,max_digits=9999999,decimal_places=0)
