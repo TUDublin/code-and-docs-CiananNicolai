@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="post-entry">
+    <div class="justify-content-center mx-auto" style="width:800px">
+      <div class="card">
+        <div class="card-header">
+        <div class ="row">
+          <div class="col" >
+          <h2>{{ object.title }}</h2>
+          <p>by {{ object.author }} | {{ object.date }}</p>
+          </div>
+          <div class="col-md-2 offset-md-4">
+          <p><a href="{% url 'post_edit' post.pk %}">Edit</a>
+            {% if user.username %} |
+            <a href="{% url 'post_delete' post.pk %}">Delete</a>
+            {% endif %}
+          </p>
+          </div>
+          </div>
+        </div>
+        <div class="card-body">
+        {% if post.image %}
+        <img class = "post py-1" src="{{post.image.url}}" alt="{{ post.title }}">
+        {% endif %}
+        <p>{{ object.body }}</p>
+        </div>
+        <div class="card-footer">
+          <p><a href="{% url 'post_comment' %}">Comment ...</a></p>
+          {% for comment in post.comments.all %}
+          <p>
+            <span class="font-weight-bold">{{ comment.author }} &middot;</span>
+            {{ comment.comment }}
+          </p>
+        {% endfor %}
+      <p><a href="{% url 'post_list' %}">Go back ...</a></p>
+    </div>
+    {% endblock content %}

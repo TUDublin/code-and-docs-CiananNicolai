@@ -3,6 +3,7 @@ from accounts.models import CustomUser
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 
 class PostType(models.Model):
@@ -39,7 +40,7 @@ class UserPost(models.Model):
     text = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to="userPost", blank=True)
     likes = models.DecimalField(blank=True,max_digits=9999999,decimal_places=0)
-    comments = models.CharField(blank=True, max_length=250)
+    commentCount = models.CharField(blank=True, max_length=250)
     postTime = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     edited = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     status = models.IntegerField(choices=STATUS, default=0)
@@ -55,3 +56,18 @@ class UserPost(models.Model):
 
     def __str__(self):
         return self.username
+
+class Comment(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    comment = models.TextField()
+    author = models.ForeignKey(get_user_model(),on_delete = models.CASCADE)
+
+    def str(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.part.id)])
