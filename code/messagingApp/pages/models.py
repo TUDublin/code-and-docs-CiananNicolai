@@ -23,6 +23,10 @@ class PostType(models.Model):
     def __str__(self):
         return self.name
 
+STATUS = (
+    (0,"Draft"),
+    (1,"Publish")
+)
 
 class UserPost(models.Model):
     id = models.UUIDField(
@@ -38,14 +42,16 @@ class UserPost(models.Model):
     comments = models.CharField(blank=True, max_length=250)
     postTime = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     edited = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    status = models.IntegerField(choices=STATUS, default=0)
+
 
     class Meta:
         ordering =('-postTime',)
-        verbose_name = 'post'
-        verbose_name_plural ="posts"
+        verbose_name = 'userpost'
+        verbose_name_plural ="userposts"
     
     def get_absolute_url(self):
-        return reverse('pages:post detail', args=[self.posttype.id, self.id])
+        return reverse('pages', args=[self.id])
 
     def __str__(self):
-        return self.text
+        return self.username

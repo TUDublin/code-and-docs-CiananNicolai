@@ -27,7 +27,7 @@ def signinView(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('shop:allProdCat')
+                return redirect('base')
             else:
                 return redirect('signup')
     else:
