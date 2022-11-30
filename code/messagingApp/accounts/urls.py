@@ -4,6 +4,6 @@ from .views import signupView, signinView, signoutView
 
 urlpatterns = [
     path('create/', signupView, name='signup'),
-    path('login/', signinView, name='signin'),
-    path('logout/', signoutView, name='signout'),
+    path('signout/', signinView, name='signin'),
+    path('signout/', signoutView, name='signout'),
 ]

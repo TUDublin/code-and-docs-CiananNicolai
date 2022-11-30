@@ -2,49 +2,49 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block metadescription %}
-xxx
+	Sign up to get a new account with us. The perfect cushion store has a variety of stunning and comfy cushions.
 {% endblock %}
 {% block title %}
-xxx
+	Create a New Account - Perfect Cushion Store
 {% endblock %}
 {% block content %}
-<div>
-	{% if not form.is_valid %}
-		<div class="mx-auto">
-			<br>
-			<h1 class="my_title text-center">Create a new account</h1>
-			<br>
-			<div class="col-9 col-sm-9 col-md-6 col-lg-5 mx-auto bg-light">
+	<div>
+		{% if not form.is_valid %}
+			<div class="mx-auto">
 				<br>
-				<p>Enter the following information to create a new account.</p>
-				<form method="post">
-					<p>{{ form | crispy }}</p>
-					{% csrf_token %}
-					<button type="submit" class="btn btn-secondary">Register Account</button>
-				</form>
+				<h1 class="my_title text-center">Create a new account</h1>
 				<br>
+				<div class="col-9 col-sm-9 col-md-6 col-lg-5 mx-auto bg-light">
+					<br>
+					<p>Enter the following information to create a new account.</p>
+					<form method="post">
+						<p>{{ form | crispy }}</p>
+						{% csrf_token %}
+						<button type="submit" class="btn btn-secondary">Register Account</button>
+					</form>
+					<br>
+				</div>
 			</div>
-		</div>
-	{% else %}
-		<div class="mx-auto">
-			<br>
-			<h1 class="my_title text-center">Your account has been successfully created</h1>
-			<br>
-			<div>
-				<p>
-					Dear Customer,
-					<br>
-					<br>
-					Your account has been created and it is ready to use.
-					<br>
-					<a href="{% url 'shop:allProdCat' %}">Continue shopping</a> and enjoy the 
-					variety of cushions that we have at the perfect cushion store.
-				</p>
+		{% else %}
+			<div class="mx-auto">
+				<br>
+				<h1 class="my_title text-center">Your account has been successfully created</h1>
+				<br>
+				<div>
+					<p>
+						Dear Customer,
+						<br>
+						<br>
+						Your account has been created and it is ready to use.
+						<br>
+                        <a href="{% url 'shop:allProdCat' %}">Continue shopping</a> and enjoy the 
+                        variety of cushions that we have at the perfect cushion store.
+					</p>
+				</div>
 			</div>
-		</div>
 
-	{% endif %}
-</div>
-<br>
+		{% endif %}
+	</div>
+	<br>
 {% endblock %}
 
