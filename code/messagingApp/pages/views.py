@@ -26,7 +26,7 @@ class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.author == self.request.user
+        return obj.username == self.request.user
 
 class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
     model = UserPost
@@ -35,7 +35,7 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.author == self.request.user
+        return obj.username == self.request.user
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = UserPost
@@ -43,6 +43,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     template_name = 'post_new.html'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
+        form.instance.username = self.request.user
         return super().form_valid(form)
 
