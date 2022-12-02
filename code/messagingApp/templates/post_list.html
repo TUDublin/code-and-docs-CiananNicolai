@@ -1,23 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}Articles{% endblock title %}
 {% block content %}
-  {% for post in object_list %}
-  <div class="justify-content-center mx-auto" style="width:800px">
-    <div class="card">
-      <div class="card-header">
-        <span class="text-muted">by {{ post.username }} | {{ post.date }}</span>
-      </div>
-      <div class="card-body">
-        {% if post.image %}
-        <img class = "post py-1" src="{{post.image.url}}" alt="{{ post.postTime }}">
-        {% endif %}
-        <p>{{ post.body }}</p>
-      </div>
-      <div class="card-footer">
-        <a href="{% url 'post_detail' post.pk %}">View comments ...</a>
-      </div>
+  {% for pages in post_details %}
+  <div  class="col d-flex justify-content-center">
+  <div class="card w-50 p-3 ">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">{{pages.username}}</h5>
+      <p class="card-text">{{pages.text}}</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
   </div>
-    <br/>
+</div>
   {% endfor %}
-{% endblock content %}
+{% endblock %}
