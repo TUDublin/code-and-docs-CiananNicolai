@@ -8,7 +8,9 @@
     <div class="card-body">
       <h5 class="card-title">{{pages.username}}</h5>
       <p class="card-text">{{pages.text}}</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+      <div class="card-footer">
+        <a href="{% url 'pages:post_detail' pages.pk %}">View comments ...</a>
+      </div>
     </div>
   </div>
 </div>

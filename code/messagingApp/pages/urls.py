@@ -6,6 +6,7 @@ from .views import (
     PostDeleteView,
     PostCreateView,
     HomePageView,
+    CommentCreateView,
 )
 
 app_name = "pages"
@@ -23,4 +24,5 @@ urlpatterns = [
 
     path('new/', PostCreateView.as_view(), name='post_new'),
     path('history', views.postHistory, name='post_history'),
+    path('comment/',CommentCreateView.as_view(), name='comment_detail'),
     ]

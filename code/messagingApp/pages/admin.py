@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PostType, UserPost
+from .models import PostType, UserPost, Comment
 
 class PostTypeAdmin(admin.ModelAdmin):
     list_display = ['id','name']
@@ -10,3 +10,8 @@ class UserPostAdmin(admin.ModelAdmin):
     list_display = ['id','posttype','username', 'text', 'image','likes','commentCount','postTime','edited']
 
 admin.site.register(UserPost, UserPostAdmin)
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['id','username', 'comment', 'image','likes','postTime','edited']
+
+admin.site.register(Comment, CommentAdmin)

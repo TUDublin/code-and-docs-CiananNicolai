@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-  <div class="post-entry">
+  <div class="article-entry">
     <div class="justify-content-center mx-auto" style="width:800px">
       <div class="card">
         <div class="card-header">
         <div class ="row">
           <div class="col" >
-          <p>by {{ post.username}} | {{ post.date }}</p>
+          <p>by {{ pages.username }} | {{ pages.postTime }}</p>
           </div>
           <div class="col-md-2 offset-md-4">
-          <p><a href="{% url 'post_edit' post.pk %}">Edit</a>
+          <p><a href="{% url 'pages:post_edit' post.pk %}">Edit</a>
             {% if user.username %} |
-            <a href="{% url 'post_delete' post.pk %}">Delete</a>
+            <a href="{% url 'pages:post_delete' post.pk %}">Delete</a>
             {% endif %}
           </p>
           </div>
@@ -21,6 +21,16 @@
         {% if post.image %}
         <img class = "post py-1" src="{{post.image.url}}" alt="{{ post.text }}">
         {% endif %}
-        <p>{{ post.text }}</p>
+        <p>{{ pages.text }}</p>
         </div>
+        <div class="card-footer">
+          <p><a href="{% url 'pages:post_comment' %}">Comment ...</a></p>
+          {% for comment in post.comments.all %}
+          <p>
+            <span class="font-weight-bold">{{ comment.username }} &middot;</span>
+            {{ comment.comment }}
+          </p>
+        {% endfor %}
+      <p><a href="{% url 'pages:post_list' %}">Go back ...</a></p>
+    </div>
     {% endblock content %}
