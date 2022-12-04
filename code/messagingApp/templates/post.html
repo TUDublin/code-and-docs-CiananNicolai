@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}pages{% endblock title %}
+{% block content %}
+<p>3</p>
+<!-- Blog Entries Column -->
+<div class="col-md-8 mt-3 left">
+    {% for user in object_list  %}
+            <p>{{user.text }}</p>
+        </div>
+   {% endfor %}   
+{% endblock content %}

@@ -11,17 +11,6 @@ from .forms import CommentForm
 class HomePageView(TemplateView):
     template_name = 'base.html' 
 
-class CommentCreateView(LoginRequiredMixin, CreateView):
-    model = Comment
-    fields = ('image', 'comment')
-    template_name = 'comment_detail.html'
-    success_url = reverse_lazy('post_list')
-
-    def form_valid(self, form):
-        form.instance.username = self.request.user
-        return super().form_valid(form)
-
-
 def postHistory(request):
     post_details = UserPost.objects.all
     return render(request,'post_list.html',{'post_details': post_details})
@@ -42,7 +31,7 @@ class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
 class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
     model = UserPost
     template_name = 'post_delete.html'
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy('pages:post_history')
 
     def test_func(self):
         obj = self.get_object()
@@ -62,3 +51,16 @@ def viewPost(request, comment_id):
         posts = UserPost.objects.get(id=comment_id)
         post_items = Comment.objects.all
     return render(request, 'post/post_detail.html', {'post':posts, 'post_items':post_items})
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    fields = ('image', 'comment')
+    template_name = 'comment_detail.html'
+    success_url = reverse_lazy('pages:post_history')
+
+    def form_valid(self, form):
+        form.instance.username = self.request.user
+        return super().form_valid(form)
+
+def postComment(request):
+     comments = comments.all()

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'pages',
     'crispy_forms',
+    'django_fastdev',
 ]
 
 MIDDLEWARE = [

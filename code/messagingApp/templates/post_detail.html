@@ -6,31 +6,31 @@
         <div class="card-header">
         <div class ="row">
           <div class="col" >
-          <p>by {{ pages.username }} | {{ pages.postTime }}</p>
+          <p>by {{ user.username }} | {{ userpost.postTime }}</p>
           </div>
           <div class="col-md-2 offset-md-4">
-          <p><a href="{% url 'pages:post_edit' post.pk %}">Edit</a>
+          <p><a href="{% url 'pages:post_edit' userpost.pk %}">Edit</a>
             {% if user.username %} |
-            <a href="{% url 'pages:post_delete' post.pk %}">Delete</a>
+            <a href="{% url 'pages:post_delete' userpost.pk %}">Delete</a>
             {% endif %}
           </p>
           </div>
           </div>
         </div>
         <div class="card-body">
-        {% if post.image %}
-        <img class = "post py-1" src="{{post.image.url}}" alt="{{ post.text }}">
+        {% if userpost.image %}
+        <img class = "post py-1" src="{{userpost.image.url}}" alt="{{ userpost.text }}">
         {% endif %}
-        <p>{{ pages.text }}</p>
+        <p>{{ userpost.text }}</p>
         </div>
         <div class="card-footer">
-          <p><a href="{% url 'pages:post_comment' %}">Comment ...</a></p>
-          {% for comment in post.comments.all %}
+          <p><a href="{% url 'pages:comment_detail' %}">Comment ...</a></p>
+          {% for comment in userpost.comments.all %}
           <p>
             <span class="font-weight-bold">{{ comment.username }} &middot;</span>
             {{ comment.comment }}
           </p>
         {% endfor %}
-      <p><a href="{% url 'pages:post_list' %}">Go back ...</a></p>
+      <p><a href="{% url 'pages:post_history' %}">Go back ...</a></p>
     </div>
     {% endblock content %}
