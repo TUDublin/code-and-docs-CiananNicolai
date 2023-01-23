@@ -5,6 +5,7 @@
 .my_custom_div {
 	margin-bottom: 20px !important;
 }
+
 .my_top_navbar_div {
 	height: 60px;
 	line-height: 50px;
@@ -28,4 +29,8 @@
 	text-transform: uppercase;
 	letter-spacing: .2em;
 	font-size: 12px;
+}
+
+.my_custom_div {
+	margin-bottom: 20px !important;
 }

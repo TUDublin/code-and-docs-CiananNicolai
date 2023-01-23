@@ -13,33 +13,8 @@
             <a class="nav-link" href="{% url 'pages:post_history' %}">Posts</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown
-            </a>
-            <ul class="dropdown-menu">
-                {% if user.is_authenticated %}
-                <li>
-                          Welcome, <a href="#" class="dropdown-toggle" data-toggle="dropdown" 
-                          aria-haspopup="true" aria-expanded="false">{{ user.username }} 
-                          <i class="fas fa-user-circle"></i></a>
-                </li>
-                <li>
-                  <a href="{% url 'signout' %}">Sign Out <i class="fas fa-sign-out-alt"></i></a>
-                </li>
-                {% else %}
-                <li>
-                  <a href="{% url 'signup' %}">Sign Up <i class="fas fa-user-plus"></i></a>
-                </li>
-                <li>
-                  <a href="{% url 'signin' %}">Sign In <i class="fas fa-sign-in-alt"></i></a>
-                </li>
-                {% endif %}
-              </ul>
-          
-            </ul>
-          </li>
           <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
+            
           </li>
         </ul>
         <form class="d-flex" role="search">
