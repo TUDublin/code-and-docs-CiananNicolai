@@ -16,7 +16,6 @@
 .my_custom_menu ul li {
 	list-style: none;
 	color: #000;
-	text-transform: uppercase;
 	letter-spacing: .2em;
 	font-size: 12px;
 	padding-right: 20px;
@@ -26,7 +25,6 @@
 	text-decoration: none;
 	color: #000;
 	list-style: none;
-	text-transform: uppercase;
 	letter-spacing: .2em;
 	font-size: 12px;
 }
