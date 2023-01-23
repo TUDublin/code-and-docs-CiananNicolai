@@ -2,47 +2,40 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block metadescription %}
-	Sign up to get a new account with us.
+	Sign in.
 {% endblock %}
 {% block title %}
-
+	Login - Perfect Cushion Store
 {% endblock %}
 {% block content %}
-	<div>
-		{% if not form.is_valid %}
-			<div class="mx-auto">
+	<div class="container">
+		<br>
+		<h1 class="my_title text-center">Login or Create a New Account</h1>
+		<br>
+		<div class="row">
+			<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center my_custom_div">
 				<br>
-				<h1 class="my_title text-center">Create a new account</h1>
+				<h2 class="my_title">New Customer?</h2>
 				<br>
-				<div class="col-9 col-sm-9 col-md-6 col-lg-5 mx-auto bg-light">
+				<a href="{% url 'signup' %}" class="btn btn-secondary">Create New Account</a>
+			</div>
+			<div class="col-12 col-sm-12 col-md-12 col-lg-6 bg-light">
+				<div>
 					<br>
-					<p>Enter the following information to create a new account.</p>
+					<h2 class="my_title">Registered Customers Only</h2>
 					<form method="post">
-						<p>{{ form | crispy }}</p>
 						{% csrf_token %}
-						<button type="submit" class="btn btn-secondary">Register Account</button>
+						<p>{{ form | crispy }}</p>
+						<button type="submit" class="btn btn-secondary">Login</button>
 					</form>
 					<br>
 				</div>
+				
 			</div>
-		{% else %}
-			<div class="mx-auto">
-				<br>
-				<h1 class="my_title text-center">Your account has been successfully created</h1>
-				<br>
-				<div>
-					<p>
-						Dear Customer,
-						<br>
-						<br>
-						Your account has been created and it is ready to use.
-						<br>
-					</p>
-				</div>
-			</div>
-
-		{% endif %}
+		</div>
+		<br>
 	</div>
 	<br>
 {% endblock %}
+
 
