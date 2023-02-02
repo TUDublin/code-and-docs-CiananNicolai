@@ -27,7 +27,7 @@ def signinView(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('pages')
+                return redirect('pages:post_history')
             else:
                 return redirect('signup')
     else:
