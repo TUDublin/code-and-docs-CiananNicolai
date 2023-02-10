@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls', 'allauth.urls')),
+    path('accounts/', include('accounts.urls')),
     path('pages/', include('pages.urls')),
     path(
         "favicon.ico",
