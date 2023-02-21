@@ -19,7 +19,18 @@
 				<br>
 				<a href="{% url 'signup' %}" class="btn btn-secondary">Create New Account</a>
 
-				<a href="{% provider_login_url 'google' %}">Login With Google</a>
+				<h1>Welcome Home!</h1>
+<h3>You are visiting from :</h3>
+<ul>
+    <li>IP Address : {{ip}}</li>
+    <li>Device: {{ device_type}}</li>
+    <li>Browser: {{browser_type}} {{browser_version}}</li>
+    <li>OS: {{os_type}} {{os_version}}</li>
+    <li>City: {{ location_city }}</li>
+    <li>Country: {{ location_country }}</li>
+</ul>
+
+				{% comment %} <a href="{% provider_login_url 'google' %}">Login With Google</a> {% endcomment %}
 			</div>
 			<div class="col-12 col-sm-12 col-md-12 col-lg-6 bg-light">
 				<div>

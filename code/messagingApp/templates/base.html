@@ -24,38 +24,23 @@
                   3 of 3
               </div>
           </div>
-          <ul>
-              <li>IP Address : {{ip}}</li>
-              <li>Device: {{ device_type}}</li>
-              <li>Browser: {{browser_type}} {{browser_version}}</li>
-              <li>OS: {{os_type}} {{os_version}}</li>
-              <li>City: {{ location_city }}</li>
-              <li>Country: {{ location_country }}</li>
-          </ul>
+
 
           {% block content %}
           {% endblock %}
       </div>
 
 <script>
-const successCallback = (position) => {
-  console.log(position);
-};
+  const successCallback = (position) => {
+    console.log(position);
+  };
+  
+  const errorCallback = (error) => {
+    console.log(error);
+  };
+  
+  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
-const errorCallback = (error) => {
-  console.log(error);
-};
-
-navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-
-
-// check for Geolocation support
-if (navigator.geolocation) {
-  console.log('Geolocation is supported!');
-} else {
-  console.log('Geolocation is not supported for this Browser/OS.');
-}
-const id = navigator.geolocation.watchPosition(successCallback, errorCallback);
 </script>
 </body>
 </html></html>

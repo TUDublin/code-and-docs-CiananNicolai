@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<ul>
+  <li>IP Address : {{ ip }}</li>
+  <li>Device: {{ device_type}}</li>
+  <li>Browser: {{browser_type}} {{browser_version}}</li>
+  <li>OS: {{os_type}} {{os_version}}</li>
+  <li>City: {{ location_city }}</li>
+  <li>Country: {{ location_country }}</li>
+</ul>
   <div class="article-entry">
     <div class="justify-content-center mx-auto" style="width:800px">
       <div class="card">

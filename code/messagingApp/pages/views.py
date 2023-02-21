@@ -4,14 +4,13 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import UserPost, CustomUser, Comment
-from django.shortcuts import render,redirect, get_object_or_404
+from django.shortcuts import render,redirect, get_object_or_404, HttpResponse
 from .forms import CommentForm
-from django.shortcuts import render, HttpResponse
 from django.contrib.gis.geoip2 import GeoIP2
 
 
 class HomePageView(TemplateView):
-    template_name = 'base.html' 
+    template_name = 'home.html' 
 
 def postHistory(request):
     post_details = UserPost.objects.all
@@ -68,6 +67,7 @@ def postComment(request):
      comments = comments.all()
 
 def home(request):
+    print("test")
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')    
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
@@ -104,5 +104,6 @@ def home(request):
         "os_version":os_version,
         "location_country": location_country,
         "location_city": location_city
-    }    
-    return render(request, "home.html", context)
+    }
+    
+    return render(request, "signin.html", context)

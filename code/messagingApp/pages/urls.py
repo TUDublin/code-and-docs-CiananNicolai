@@ -12,7 +12,7 @@ from .views import (
 app_name = "pages"
 
 urlpatterns = [
-    path('', HomePageView.as_view(), name='home'),
+    path('home/', HomePageView.as_view(), name='home'),
     path('<uuid:pk>/edit/',
         PostUpdateView.as_view(), name='post_edit'),
 
