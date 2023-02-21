@@ -66,7 +66,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 def postComment(request):
      comments = comments.all()
 
-def home(request):
+def showIP(request):
     print("test")
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')    
     if x_forwarded_for:
@@ -105,5 +105,5 @@ def home(request):
         "location_country": location_country,
         "location_city": location_city
     }
-    
-    return render(request, "signin.html", context)
+    print(context)
+    return render(request, "HomePageView", context)

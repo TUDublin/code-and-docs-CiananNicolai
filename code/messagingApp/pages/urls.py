@@ -12,7 +12,8 @@ from .views import (
 app_name = "pages"
 
 urlpatterns = [
-    path('home/', HomePageView.as_view(), name='home'),
+    path('home/', 
+        views.showIP, name='home'),
     path('<uuid:pk>/edit/',
         PostUpdateView.as_view(), name='post_edit'),
 
