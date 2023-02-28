@@ -44,6 +44,8 @@ class UserPost(models.Model):
     postTime = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     edited = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     status = models.IntegerField(choices=STATUS, default=0)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
 
     class Meta:

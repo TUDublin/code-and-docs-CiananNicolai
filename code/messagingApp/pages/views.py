@@ -7,6 +7,8 @@ from .models import UserPost, CustomUser, Comment
 from django.shortcuts import render,redirect, get_object_or_404, HttpResponse
 from .forms import CommentForm
 from django.contrib.gis.geoip2 import GeoIP2
+from math import radians, sin, cos, sqrt, atan2
+
 
 
 class HomePageView(TemplateView):
@@ -107,3 +109,39 @@ def showIP(request):
     }
     print(context)
     return render(request, "HomePageView", context)
+
+def my_view(request):
+    user_ip = request.META.get('REMOTE_ADDR', None)
+    response = requests.get(f'http://ipinfo.io/{user_ip}/json')
+    data = response.json()
+    user_latitude, user_longitude = data['loc'].split(',')
+    radius = 10 # km
+    visible_posts = []
+
+    # filter posts that are within the desired radius of the user's location
+    for post in Post.objects.all():
+        distance = calculate_distance(user_latitude, user_longitude, post.latitude, post.longitude)
+        if distance <= radius:
+            visible_posts.append(post)
+
+    # render the template with the visible posts
+    context = {'posts': visible_posts}
+    return render(request, 'my_template.html', context)
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    # approximate radius of Earth in km
+    R = 6373.0
+
+    # convert latitude and longitude from degrees to radians
+    lat1, lon1, lat2, lon2 = map(radians, [float(lat1), float(lon1), float(lat2), float(lon2)])
+
+    # calculate the difference between the latitudes and longitudes
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    # apply the Haversine formula to calculate the distance between the points
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    distance = R * c
+
+    return distance
