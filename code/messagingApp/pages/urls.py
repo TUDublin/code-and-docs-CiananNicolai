@@ -13,7 +13,7 @@ app_name = "pages"
 
 urlpatterns = [
     path('home/', 
-        views.showIP, name='home'),
+        HomePageView, name='home'),
     path('<uuid:pk>/edit/',
         PostUpdateView.as_view(), name='post_edit'),
 
@@ -27,3 +27,5 @@ urlpatterns = [
     path('history', views.postHistory, name='post_history'),
     path('comment/',CommentCreateView.as_view(), name='comment_detail'),
     ]
+
+    #views.showIP
