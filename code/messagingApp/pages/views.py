@@ -4,10 +4,11 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import UserPost, CustomUser, Comment
-from django.shortcuts import render,redirect, get_object_or_404, HttpResponse, request
+from django.shortcuts import render,redirect, get_object_or_404, HttpResponse
 from .forms import CommentForm
 from django.contrib.gis.geoip2 import GeoIP2
 from math import radians, sin, cos, sqrt, atan2
+
 
 
 
@@ -43,17 +44,21 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = UserPost
     fields = ('username', 'text', 'image')
-    user_ip = request.META.get('REMOTE_ADDR')
-        
-    # Use GeoIP2 library to get latitude and longitude coordinates from IP address
-    geo = GeoIP2()
-    user_location = geo.city(user_ip)
-    latitude = user_location['latitude']
-    longitude = user_location['longitude']
+
 
     template_name = 'post_new.html'
 
     def form_valid(self, form):
+        user_ip = self.request.META.get('REMOTE_ADDR')
+        # Use GeoIP2 library to get latitude and longitude coordinates from IP address
+        geo = GeoIP2()
+        user_location = geo.city(user_ip)
+        latitude = user_location['latitude']
+        longitude = user_location['longitude']              
+        post = form.save(commit=False)
+        post.latitude = latitude
+        post.longitude = longitude
+        post.save()
         form.instance.username = self.request.user
         return super().form_valid(form)
 
@@ -73,7 +78,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         form.instance.username = self.request.user
         return super().form_valid(form)
 
-def postComment(request):
+def postComment():
      comments = comments.all()
 
 def showIP(request):
@@ -134,7 +139,7 @@ def my_view(request):
 
     # render the template with the visible posts
     context = {'posts': visible_posts}
-    return render(request, 'my_template.html', context)
+    return render(request, 'post_list.html', context)
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     # approximate radius of Earth in km
