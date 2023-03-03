@@ -164,4 +164,4 @@ SITE_ID = 2
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-GEOIP_PATH = os.path.join('geoip')
+GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')

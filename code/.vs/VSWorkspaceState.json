@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\messagingApp",
+    "\\messagingApp\\geoip",
+    "\\messagingApp\\pages",
+    "\\messagingApp\\templates"
+  ],
+  "SelectedNode": "\\messagingApp\\templates\\base.html",
+  "PreviewInSolutionExplorer": false
+}

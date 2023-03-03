@@ -13,7 +13,7 @@ app_name = "pages"
 
 urlpatterns = [
     path('home/', 
-        HomePageView, name='home'),
+        HomePageView.as_view(), name='home'),
     path('<uuid:pk>/edit/',
         PostUpdateView.as_view(), name='post_edit'),
 
@@ -24,7 +24,7 @@ urlpatterns = [
         PostDeleteView.as_view(), name='post_delete'),
 
     path('new/', PostCreateView.as_view(), name='post_new'),
-    path('history', views.postHistory, name='post_history'),
+    path('history', views.my_view, name='post_history'),
     path('comment/',CommentCreateView.as_view(), name='comment_detail'),
     ]
 

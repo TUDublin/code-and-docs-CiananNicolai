@@ -7,7 +7,8 @@ class PostTypeAdmin(admin.ModelAdmin):
 admin.site.register(PostType, PostTypeAdmin)
 
 class UserPostAdmin(admin.ModelAdmin):
-    list_display = ['id','posttype','username', 'text', 'image','likes','commentCount','postTime','edited']
+    list_display = ['id','posttype','username', 'text', 'image','likes','commentCount','postTime','edited', 'latitude','longitude']
+    list_editable = ['latitude','longitude']
 
 admin.site.register(UserPost, UserPostAdmin)
 

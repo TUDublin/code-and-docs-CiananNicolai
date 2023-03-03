@@ -8,6 +8,9 @@ from django.shortcuts import render,redirect, get_object_or_404, HttpResponse
 from .forms import CommentForm
 from django.contrib.gis.geoip2 import GeoIP2
 from math import radians, sin, cos, sqrt, atan2
+import logging
+import urllib.request
+import json
 
 
 
@@ -15,9 +18,9 @@ from math import radians, sin, cos, sqrt, atan2
 class HomePageView(TemplateView):
     template_name = 'home.html' 
 
-def postHistory(request):
-    post_details = UserPost.objects.all
-    return render(request,'post_list.html',{'post_details': post_details})
+# def postHistory(request):
+#     post_details = UserPost.objects.all
+#     return render(request,'post_list.html',{'post_details': post_details})
 
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = UserPost
@@ -125,20 +128,23 @@ def postComment():
 
 def my_view(request):
     user_ip = request.META.get('REMOTE_ADDR', None)
-    response = request.get(f'http://ipinfo.io/{user_ip}/json')
-    data = response.json()
+    url = f'http://ipinfo.io/92.251.255.11/json'
+    with urllib.request.urlopen(url) as response:
+        data = json.loads(response.read().decode())
     user_latitude, user_longitude = data['loc'].split(',')
-    radius = 10 # km
+    radius = 15 # km
     visible_posts = []
 
     # filter posts that are within the desired radius of the user's location
     for post in UserPost.objects.all():
         distance = calculate_distance(user_latitude, user_longitude, post.latitude, post.longitude)
+        logging.error("distance",distance)
         if distance <= radius:
             visible_posts.append(post)
+    logging.error(visible_posts)
 
     # render the template with the visible posts
-    context = {'posts': visible_posts}
+    context = {'post_list': visible_posts}
     return render(request, 'post_list.html', context)
 
 def calculate_distance(lat1, lon1, lat2, lon2):
