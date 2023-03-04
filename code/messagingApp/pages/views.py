@@ -4,7 +4,7 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import UserPost, CustomUser, Comment, PostLike
-from django.shortcuts import render,redirect, get_object_or_404, HttpResponse
+from django.shortcuts import render,redirect, get_object_or_404, reverse, HttpResponse
 from .forms import CommentForm
 from django.contrib.gis.geoip2 import GeoIP2
 from math import radians, sin, cos, sqrt, atan2
@@ -180,8 +180,7 @@ def like_post(request, uuid):
         like.delete()
         liked = False
 
-    post.like_count = post.postlike_set.count()
+    post.likes = post.postlike_set.count()
     post.save()
 
-    response_data = {'liked': liked, 'like_count': post.like_count}
-    return JsonResponse(response_data)
+    return redirect(reverse('pages:post_history'))

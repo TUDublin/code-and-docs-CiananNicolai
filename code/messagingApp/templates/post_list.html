@@ -11,7 +11,7 @@
       <div class="card-footer">
         <form action="{% url 'pages:like_post' post.pk %}" method="post">
           {% csrf_token %}
-          <button type="submit" class="btn btn-primary">Like</button>
+          <button type="submit" class="btn btn-primary">Like {{post.likes}}</button>
         </form>
         <a href="{% url 'pages:like_post' uuid=post.pk %}">View comments ...</a>
       </div>
@@ -21,3 +21,25 @@
 
   {% endfor %}
 {% endblock %}
+
+<script>
+  // add click event listener to all like buttons
+  var likeButtons = document.querySelectorAll('.like-btn');
+  likeButtons.forEach(function(likeButton) {
+    likeButton.addEventListener('click', function() {
+      var postId = this.getAttribute('data-post-id');
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/post/' + postId + '/like/');
+      xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          var postCard = document.querySelector('#post-' + postId);
+          var likeCount = postCard.querySelector('.like-count');
+          likeCount.innerHTML = response.like_count;
+        }
+      };
+      xhr.send();
+    });
+  });
+</script>
