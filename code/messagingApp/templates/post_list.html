@@ -9,7 +9,11 @@
       <h5 class="card-title">{{post.username}}</h5>
       <p class="card-text">{{post.text}} {{post.latitude}}</p>
       <div class="card-footer">
-        <a href="{% url 'pages:post_detail' post.pk %}">View comments ...</a>
+        <form action="{% url 'pages:like_post' post.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">Like</button>
+        </form>
+        <a href="{% url 'pages:like_post' uuid=post.pk %}">View comments ...</a>
       </div>
     </div>
   </div>

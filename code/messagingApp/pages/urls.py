@@ -7,6 +7,7 @@ from .views import (
     PostCreateView,
     HomePageView,
     CommentCreateView,
+    like_post
 )
 
 app_name = "pages"
@@ -26,6 +27,7 @@ urlpatterns = [
     path('new/', PostCreateView.as_view(), name='post_new'),
     path('history', views.my_view, name='post_history'),
     path('comment/',CommentCreateView.as_view(), name='comment_detail'),
+    path('post/<uuid:uuid>/like/', like_post, name='like_post'),
     ]
 
     #views.showIP

@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import UserPost, CustomUser, Comment
+from .models import UserPost, CustomUser, Comment, PostLike
 from django.shortcuts import render,redirect, get_object_or_404, HttpResponse
 from .forms import CommentForm
 from django.contrib.gis.geoip2 import GeoIP2
@@ -11,8 +11,10 @@ from math import radians, sin, cos, sqrt, atan2
 import logging
 import urllib.request
 import json
-
-
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 
 
 class HomePageView(TemplateView):
@@ -164,3 +166,22 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     distance = R * c
 
     return distance
+
+@login_required
+@require_POST
+def like_post(request, uuid):
+    post = get_object_or_404(UserPost, id=uuid)
+    try:
+        like = PostLike.objects.create(user=request.user, post=post)
+        liked = True
+    except IntegrityError:
+        # the user has already liked this post
+        like = PostLike.objects.get(user=request.user, post=post)
+        like.delete()
+        liked = False
+
+    post.like_count = post.postlike_set.count()
+    post.save()
+
+    response_data = {'liked': liked, 'like_count': post.like_count}
+    return JsonResponse(response_data)
