@@ -9,12 +9,13 @@ from .forms import CommentForm, UserPostForm, UserPostFormWithLocation
 from django.contrib.gis.geoip2 import GeoIP2
 from math import radians, sin, cos, sqrt, atan2
 import logging
-import urllib.request
-import json
+import urllib.request, json, pandas as pd
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.contrib import messages
+
 
 
 
@@ -56,21 +57,23 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         if form.cleaned_data['use_geo']:
-            post.latitude, post.longitude = self.get_user_location().values()
+            location = self.get_user_location()
+            if location:
+                post.latitude, post.longitude = location
+            else:
+                messages.warning(self.request, 'Could not determine your location.')
         form.instance.username = self.request.user
         post.save()
         return super().form_valid(form)
 
     def get_user_location(self):
-        def error():
-            return {'latitude': None, 'longitude': None}
-
         try:
             position = self.request.GET.get('position', '')
             lat, lng = position.split(',')
-            return {'latitude': float(lat), 'longitude': float(lng)}
-        except:
-            return error()
+            return float(lat), float(lng)
+        except Exception as e:
+            print(e)
+            return None
 
     def dispatch(self, request, *args, **kwargs):
         if request.GET.get('use_geo') == '1':
@@ -104,6 +107,7 @@ def postComment():
 
 
 
+
 def my_view(request):
     if request.method == 'GET' and 'lat' in request.GET and 'long' in request.GET:
         lat = request.GET['lat']
@@ -117,19 +121,28 @@ def my_view(request):
             if distance <= radius:
                 visible_posts.append(post)
 
-        # return a JSON response with the visible posts
+        # create a list of dictionaries containing the visible posts
         data = [{'title': post.title, 'latitude': post.latitude, 'longitude': post.longitude} for post in visible_posts]
-        return JsonResponse(data, safe=False)
-    else:
-        # Get the user's IP address
-        user_ip = request.META.get('REMOTE_ADDR', None)
-        url = f'http://ipinfo.io/{user_ip}/json'
-        with urllib.request.urlopen(url) as response:
-            data = json.loads(response.read().decode())
-            print(data)
-        user_latitude, user_longitude = data['loc'].split(',')
-        # redirect to the same view with the obtained latitude and longitude as query string parameters
-        return redirect(f'/my_view/?lat={user_latitude}&long={user_longitude}')
+
+        # create a string representation of the list
+        data_str = '\n'.join([f'{post["title"]}, {post["latitude"]}, {post["longitude"]}' for post in data])
+
+        # return the list as plain text
+        return HttpResponse(request, 'post_list.html', {'post_list': data_str})
+
+    # elif request.method == 'GET':
+    #     # Get the user's IP address
+    #     user_ip = request.META.get('REMOTE_ADDR', None)
+    #     url = f'http://ipinfo.io/{user_ip}/json'
+    #     with urllib.request.urlopen(url) as response:
+    #         data = json.loads(response.read().decode())
+    #     user_latitude, user_longitude = data['loc'].split(',')
+    #     # redirect to the same view with the obtained latitude and longitude as query string parameters
+    #     return redirect(f'/my_view/?lat={user_latitude}&long={user_longitude}')
+    # else:
+    #     # handle other HTTP methods
+    #     return HttpResponseNotAllowed(['GET'])
+    
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     # approximate radius of Earth in km

@@ -23,42 +23,32 @@
 {% endblock %}
 
 <script>
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        // Make an AJAX request to the Django view with the obtained latitude and longitude
-        $.ajax({
-            url: '/my_view/',
-            data: {
-                'lat': latitude,
-                'long': longitude
-            },
-            success: function(data) {
-                // Handle the response from the Django view
-            }
-        });
-    });
-} else {
-    // Geolocation is not supported by the browser
-}
-  // add click event listener to all like buttons
-  var likeButtons = document.querySelectorAll('.like-btn');
-  likeButtons.forEach(function(likeButton) {
-    likeButton.addEventListener('click', function() {
-      var postId = this.getAttribute('data-post-id');
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', '/post/' + postId + '/like/');
-      xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-      xhr.onload = function() {
+  function successCallback(position) {
+    let lat = position.coords.latitude;
+    let long = position.coords.longitude;
+
+    // Send an AJAX request to the server to update the post list
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", `/my_view/?lat=${lat}&long=${long}`);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
-          var response = JSON.parse(xhr.responseText);
-          var postCard = document.querySelector('#post-' + postId);
-          var likeCount = postCard.querySelector('.like-count');
-          likeCount.innerHTML = response.like_count;
+          // Update the post list with the new data
+          let postList = document.getElementById("post-list");
+          postList.innerHTML = xhr.responseText;
+        } else {
+          console.error(xhr.statusText);
         }
-      };
-      xhr.send();
-    });
+      }
+    };
+    xhr.send();
+  }
+  
+  function errorCallback(error) {
+    console.error(error.message);
+  }
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   });
 </script>

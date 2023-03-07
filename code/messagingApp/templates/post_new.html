@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
+<body onload="getLocation()">
 
 <div class="card">
   <div class="card-header">
@@ -16,12 +17,19 @@
   </form>
 </div>
 <script>
-  navigator.geolocation.getCurrentPosition(position => {
-    const latitudeField = document.getElementById('latitude');
-    console.log("latfield",latitudeField)
-    const longitudeField = document.getElementById('longitude');
-    latitudeField.value = position.coords.latitude;
-    longitudeField.value = position.coords.longitude;
-  });
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  }
+  
+  function showPosition(position) {
+    let lat = position.coords.latitude;
+    let long = position.coords.longitude;
+    document.getElementById("id_latitude").value = lat;
+    document.getElementById("id_longitude").value = long;
+  };
 </script>
 {% endblock content %}

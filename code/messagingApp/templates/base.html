@@ -31,40 +31,7 @@
       </div>
 
 <script>
-  function successCallback(position) {
-    let lat = position.coords.latitude;
-    let long = position.coords.longitude;
 
-  
-    let latText.innerText = lat.toFixed(2);
-    let longText.innerText = long.toFixed(2);
-    console.log("js lat", lat)
-  
-    // Send an AJAX request to the server to update the post list
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", `/post/history/?lat=${lat}&long=${long}`);
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          // Update the post list with the new data
-          let postList = document.getElementById("post-list");
-          postList.innerHTML = xhr.responseText;
-          console.log(postList, lat)
-        } else {
-          console.error(xhr.statusText);
-        }
-      }
-    };
-    xhr.send();
-  }
-  
-  function errorCallback(error) {
-    console.error(error.message);
-  }
-  
-  document.addEventListener("DOMContentLoaded", () => {
-    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-  });
 </script>
 </body>
 </html></html>

@@ -7,7 +7,7 @@ from .views import (
     PostCreateView,
     HomePageView,
     CommentCreateView,
-    like_post
+    like_post,
 )
 
 app_name = "pages"
