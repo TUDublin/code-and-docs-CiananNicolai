@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.shortcuts import redirect
 
 
 class PostType(models.Model):
@@ -54,7 +55,7 @@ class UserPost(models.Model):
         verbose_name_plural ="userposts"
     
     def get_absolute_url(self):
-        return reverse('pages:post_history', args=[str(self.id)])
+        return redirect(reverse('pages:post_history'))
     def __str__(self):
         return self.text
 

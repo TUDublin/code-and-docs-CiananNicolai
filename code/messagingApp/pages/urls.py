@@ -25,7 +25,7 @@ urlpatterns = [
         PostDeleteView.as_view(), name='post_delete'),
 
     path('new/', PostCreateView.as_view(), name='post_new'),
-    path('history', views.my_view, name='post_history'),
+    path('history/', views.my_view, name='post_history'),
     path('comment/',CommentCreateView.as_view(), name='comment_detail'),
     path('post/<uuid:uuid>/like/', like_post, name='like_post'),
     ]

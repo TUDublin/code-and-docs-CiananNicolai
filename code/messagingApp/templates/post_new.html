@@ -15,4 +15,13 @@
     <button class="btn btn-primary ml-2" type="submit" href="{% url 'pages:post_history' %}">Save</button>
   </form>
 </div>
+<script>
+  navigator.geolocation.getCurrentPosition(position => {
+    const latitudeField = document.getElementById('latitude');
+    console.log("latfield",latitudeField)
+    const longitudeField = document.getElementById('longitude');
+    latitudeField.value = position.coords.latitude;
+    longitudeField.value = position.coords.longitude;
+  });
+</script>
 {% endblock content %}

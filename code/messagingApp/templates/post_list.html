@@ -23,6 +23,25 @@
 {% endblock %}
 
 <script>
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        // Make an AJAX request to the Django view with the obtained latitude and longitude
+        $.ajax({
+            url: '/my_view/',
+            data: {
+                'lat': latitude,
+                'long': longitude
+            },
+            success: function(data) {
+                // Handle the response from the Django view
+            }
+        });
+    });
+} else {
+    // Geolocation is not supported by the browser
+}
   // add click event listener to all like buttons
   var likeButtons = document.querySelectorAll('.like-btn');
   likeButtons.forEach(function(likeButton) {

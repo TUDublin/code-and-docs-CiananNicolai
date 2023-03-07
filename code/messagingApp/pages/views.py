@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import UserPost, CustomUser, Comment, PostLike
 from django.shortcuts import render,redirect, get_object_or_404, reverse, HttpResponse
-from .forms import CommentForm
+from .forms import CommentForm, UserPostForm, UserPostFormWithLocation
 from django.contrib.gis.geoip2 import GeoIP2
 from math import radians, sin, cos, sqrt, atan2
 import logging
@@ -15,6 +15,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+
 
 
 class HomePageView(TemplateView):
@@ -45,27 +46,42 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
     def test_func(self):
         obj = self.get_object()
         return obj.username == self.request.user
-
+    
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = UserPost
-    fields = ('username', 'text', 'image')
-
-
+    form_class = UserPostFormWithLocation
     template_name = 'post_new.html'
+    success_url = reverse_lazy('pages:post_history')
 
     def form_valid(self, form):
-        user_ip = self.request.META.get('REMOTE_ADDR')
-        # Use GeoIP2 library to get latitude and longitude coordinates from IP address
-        geo = GeoIP2()
-        user_location = geo.city(user_ip)
-        latitude = user_location['latitude']
-        longitude = user_location['longitude']              
         post = form.save(commit=False)
-        post.latitude = latitude
-        post.longitude = longitude
-        post.save()
+        if form.cleaned_data['use_geo']:
+            post.latitude, post.longitude = self.get_user_location().values()
         form.instance.username = self.request.user
+        post.save()
         return super().form_valid(form)
+
+    def get_user_location(self):
+        def error():
+            return {'latitude': None, 'longitude': None}
+
+        try:
+            position = self.request.GET.get('position', '')
+            lat, lng = position.split(',')
+            return {'latitude': float(lat), 'longitude': float(lng)}
+        except:
+            return error()
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.GET.get('use_geo') == '1':
+            return render(request, 'get_location.html')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.GET.get('use_geo') == '1':
+            kwargs['initial'] = {'use_geo': True}
+        return kwargs
 
 def viewPost(request, comment_id):
     if request.user.is_authenticated:
@@ -86,68 +102,34 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 def postComment():
      comments = comments.all()
 
-# def showIP(request):
-#     print("test")
-#     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')    
-#     if x_forwarded_for:
-#         ip = x_forwarded_for.split(',')[0]
-#     else:
-#         ip = request.META.get('REMOTE_ADDR')
-    
-#     device_type = ""
-#     browser_type = ""
-#     browser_version = ""
-#     os_type = ""
-#     os_version = ""    
-#     if request.user_agent.is_mobile:
-#         device_type = "Mobile"
-#     if request.user_agent.is_tablet:
-#         device_type = "Tablet"
-#     if request.user_agent.is_pc:
-#         device_type = "PC"
-    
-#     browser_type = request.user_agent.browser.family
-#     browser_version = request.user_agent.browser.version_string
-#     os_type = request.user_agent.os.family
-#     os_version = request.user_agent.os.version_string
-    
-#     g = GeoIP2()
-#     location = g.city(ip)
-#     location_country = location["country_name"]
-#     location_city = location["city"]    
-#     context = {
-#         "ip": ip,
-#         "device_type": device_type,
-#         "browser_type": browser_type,
-#         "browser_version": browser_version,
-#         "os_type":os_type,
-#         "os_version":os_version,
-#         "location_country": location_country,
-#         "location_city": location_city
-#     }
-#     print(context)
-#     return render(request, "HomePageView", context)
+
 
 def my_view(request):
-    user_ip = request.META.get('REMOTE_ADDR', None)
-    url = f'http://ipinfo.io/92.251.255.11/json'
-    with urllib.request.urlopen(url) as response:
-        data = json.loads(response.read().decode())
-    user_latitude, user_longitude = data['loc'].split(',')
-    radius = 15 # km
-    visible_posts = []
+    if request.method == 'GET' and 'lat' in request.GET and 'long' in request.GET:
+        lat = request.GET['lat']
+        long = request.GET['long']
+        radius = 15 # km
+        visible_posts = []
 
-    # filter posts that are within the desired radius of the user's location
-    for post in UserPost.objects.all():
-        distance = calculate_distance(user_latitude, user_longitude, post.latitude, post.longitude)
-        logging.error("distance",distance)
-        if distance <= radius:
-            visible_posts.append(post)
-    logging.error(visible_posts)
+        # filter posts that are within the desired radius of the user's location
+        for post in UserPost.objects.all():
+            distance = calculate_distance(lat, long, post.latitude, post.longitude)
+            if distance <= radius:
+                visible_posts.append(post)
 
-    # render the template with the visible posts
-    context = {'post_list': visible_posts}
-    return render(request, 'post_list.html', context)
+        # return a JSON response with the visible posts
+        data = [{'title': post.title, 'latitude': post.latitude, 'longitude': post.longitude} for post in visible_posts]
+        return JsonResponse(data, safe=False)
+    else:
+        # Get the user's IP address
+        user_ip = request.META.get('REMOTE_ADDR', None)
+        url = f'http://ipinfo.io/{user_ip}/json'
+        with urllib.request.urlopen(url) as response:
+            data = json.loads(response.read().decode())
+            print(data)
+        user_latitude, user_longitude = data['loc'].split(',')
+        # redirect to the same view with the obtained latitude and longitude as query string parameters
+        return redirect(f'/my_view/?lat={user_latitude}&long={user_longitude}')
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     # approximate radius of Earth in km
