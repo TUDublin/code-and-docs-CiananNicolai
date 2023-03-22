@@ -109,6 +109,10 @@ def postComment():
 
 
 def my_view(request):
+    # The IF statement is evaluating as false there
+    # dump the request object into the logfile (see if request.GET['lat'] and request.GET['lon'] are being set)
+    # double check the Javascript code for (i) GET, (ii) setting the request object properly
+    # write to logfile(request.GET)
     if request.method == 'GET' and 'lat' in request.GET and 'long' in request.GET:
         lat = request.GET['lat']
         long = request.GET['long']
