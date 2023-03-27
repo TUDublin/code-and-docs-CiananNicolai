@@ -1,5 +1,18 @@
 {
   "dependencies": {
     "bootstrap": "^5.2.2"
-  }
+  },
+  "name": "code-and-docs-cianannicolai",
+  "description": "Project intending to be short ranged social media app, operating based on area within certain ranges, for example 15 miles of the user.\r Optional goals include, events for bussinesses etc. based on range. A 'What's on tonight' feature. Messaging between users. Standard social media features.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
