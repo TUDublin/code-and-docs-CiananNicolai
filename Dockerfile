@@ -1,4 +1,6 @@
-FROM --platform=$BUILDPLATFORM python:3.7-alpine AS builder
+FROM --platform=$BUILDPLATFORM python:3.9-alpine AS builder
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 EXPOSE 8080
 WORKDIR /app 
 COPY requirements.txt /app
@@ -12,6 +14,9 @@ RUN apk add --update --no-cache --virtual .tmp-build-deps \
 RUN apk update \
     && apk add jpeg-dev zlib-dev libjpeg \
     && pip install Pillow
+
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev
 
 RUN pip3 install -r requirements.txt --no-cache-dir
 COPY . /app 
