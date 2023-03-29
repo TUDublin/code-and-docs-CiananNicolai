@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Articles{% endblock title %}
 {% block content %}
+<input type="hidden" name="latitude" id="id_latitude">
+<input type="hidden" name="longitude" id="id_longitude">
   {% for post in post_list %}
   <div  class="col d-flex justify-content-center">
   <div class="card w-50 p-3 ">
@@ -11,6 +13,7 @@
       <div class="card-footer">
         <form action="{% url 'pages:like_post' post.pk %}" method="post">
           {% csrf_token %}
+
           <button type="submit" class="btn btn-primary">Like {{post.likes}}</button>
         </form>
         <a href="{% url 'pages:like_post' uuid=post.pk %}">View comments ...</a>
@@ -23,32 +26,38 @@
 {% endblock %}
 
 <script>
-  function successCallback(position) {
-    let lat = position.coords.latitude;
-    let long = position.coords.longitude;
-
-    // Send an AJAX request to the server to update the post list
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", `/my_view/?lat=${lat}&long=${long}`);
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          // Update the post list with the new data
-          let postList = document.getElementById("post-list");
-          postList.innerHTML = xhr.responseText;
-        } else {
-          console.error(xhr.statusText);
-        }
-      }
-    };
-    xhr.send();
-  }
+  function sendLocationOnLoad() {
+    console.log("test")
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
   
-  function errorCallback(error) {
-    console.error(error.message);
-  }
+        // create a hidden form and submit it with the latitude and longitude
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{% url "pages:my_view" %}';
+        form.style.display = 'none';
   
-  document.addEventListener("DOMContentLoaded", () => {
-    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-  });
+        var latInput = document.createElement('input');
+        latInput.type = 'hidden';
+        latInput.name = 'latitude';
+        latInput.value = latitude;
+  
+        var longInput = document.createElement('input');
+        longInput.type = 'hidden';
+        longInput.name = 'longitude';
+        longInput.value = longitude;
+  
+        form.appendChild(latInput);
+        form.appendChild(longInput);
+        document.body.appendChild(form);
+        console.log(form)
+        console.error(longitude)
+        form.submit();
+      });
+    } else {
+      console.log('Geolocation is not supported by this browser.');
+    }
+  }
 </script>

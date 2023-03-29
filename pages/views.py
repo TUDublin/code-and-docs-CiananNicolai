@@ -18,6 +18,7 @@ from django.contrib import messages
 
 
 
+logger = logging.getLogger(__name__)
 
 class HomePageView(TemplateView):
     template_name = 'home.html' 
@@ -108,16 +109,16 @@ def postComment():
 
 
 
+
 def my_view(request):
-    # The IF statement is evaluating as false there
-    # dump the request object into the logfile (see if request.GET['lat'] and request.GET['lon'] are being set)
-    # double check the Javascript code for (i) GET, (ii) setting the request object properly
-    # write to logfile(request.GET)
-    if request.method == 'GET' and 'lat' in request.GET and 'long' in request.GET:
-        lat = request.GET['lat']
-        long = request.GET['long']
-        radius = 15 # km
-        visible_posts = []
+    logger.critical("test", request.GET)
+    radius = 15 # km
+    visible_posts = []
+    
+    if request.method == 'POST' and 'latitude' in request.POST and 'longitude' in request.POST:
+        lat = request.POST['latitude']
+        long = request.POST['longitude']
+        logger.critical(lat, long)
 
         # filter posts that are within the desired radius of the user's location
         for post in UserPost.objects.all():
@@ -126,26 +127,34 @@ def my_view(request):
                 visible_posts.append(post)
 
         # create a list of dictionaries containing the visible posts
-        data = [{'title': post.title, 'latitude': post.latitude, 'longitude': post.longitude} for post in visible_posts]
+        data = [{'pk': post.pk,'username': post.username,'text': post.text,'likes': post.likes,'latitude': post.latitude, 'longitude': post.longitude} for post in visible_posts]
 
-        # create a string representation of the list
-        data_str = '\n'.join([f'{post["title"]}, {post["latitude"]}, {post["longitude"]}' for post in data])
+        # render the post_list.html template with the visible posts
+        return render(request, 'post_list.html', {'post_list': data})
 
-        # return the list as plain text
-        return HttpResponse(request, 'post_list.html', {'post_list': data_str})
+    # return an empty response if the GET parameters are missing
+    #return HttpResponse('')
 
-    # elif request.method == 'GET':
-    #     # Get the user's IP address
-    #     user_ip = request.META.get('REMOTE_ADDR', None)
-    #     url = f'http://ipinfo.io/{user_ip}/json'
-    #     with urllib.request.urlopen(url) as response:
-    #         data = json.loads(response.read().decode())
-    #     user_latitude, user_longitude = data['loc'].split(',')
-    #     # redirect to the same view with the obtained latitude and longitude as query string parameters
-    #     return redirect(f'/my_view/?lat={user_latitude}&long={user_longitude}')
-    # else:
-    #     # handle other HTTP methods
-    #     return HttpResponseNotAllowed(['GET'])
+    elif request.method == 'GET':
+        # Get the user's IP address
+        user_ip = "92.251.255.11"
+        url = f'http://ipinfo.io/{user_ip}/json'
+        with urllib.request.urlopen(url) as response:
+            data = json.loads(response.read().decode())
+            logger.critical(data)
+        user_latitude, user_longitude = data['loc'].split(',')
+        for post in UserPost.objects.all():
+            distance = calculate_distance(user_latitude, user_longitude, post.latitude, post.longitude)
+            if distance <= radius:
+                visible_posts.append(post)
+
+        # create a list of dictionaries containing the visible posts
+        data = [{'pk': post.pk,'username': post.username,'text': post.text,'likes': post.likes,'latitude': post.latitude, 'longitude': post.longitude} for post in visible_posts]
+        # redirect to the same view with the obtained latitude and longitude as query string parameters
+        return render(request, 'post_list.html', {'post_list': data})
+    else:
+         # handle other HTTP methods
+         return HttpResponseNotAllowed(['GET'])
     
 
 def calculate_distance(lat1, lon1, lat2, lon2):
