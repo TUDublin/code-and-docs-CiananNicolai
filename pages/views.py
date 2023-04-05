@@ -15,6 +15,8 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.contrib import messages
+from profiles.models import Profile
+from profiles.views import Profile
 
 
 
