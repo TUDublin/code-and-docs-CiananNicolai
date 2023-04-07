@@ -12,10 +12,25 @@
     <p>{{ profile.birth_date }}</p>
   {% endif %}
   <h2>Posts by {{ user.username }}</h2>
-  {% for post in user.posts.all %}
+  {% for post in post_list %}
     <div>
-      <h3>{{ post.title }}</h3>
-      <p>{{ post.content }}</p>
+      <div  class="col d-flex justify-content-center">
+        <div class="card w-50 p-3 ">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title"><a href="{% url 'profiles:profile_view' username=post.username %}">{{post.username}}</h5>
+            <p class="card-text">{{post.text}} {{post.latitude}}</p>
+            <div class="card-footer">
+              <form action="{% url 'pages:like_post' post.pk %}" method="post">
+                {% csrf_token %}
+      
+                <button type="submit" class="btn btn-primary">Like {{post.likes}}</button>
+              </form>
+              <a href="{% url 'pages:like_post' uuid=post.pk %}">View comments ...</a>
+            </div>
+          </div>
+        </div>
+        </div>
     </div>
   {% empty %}
     <p>No posts yet!</p>
