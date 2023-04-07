@@ -4,12 +4,18 @@ from .models import CustomUser
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import Group
+from profiles.models import Profile
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 def signupView(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            user = form.save()
             username = form.cleaned_data.get('username')
             signup_user = CustomUser.objects.get(username=username)
             customer_group = Group.objects.get(name='Customer')

@@ -1,25 +1,22 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Profile
 from accounts.models import CustomUser
+from django.contrib.auth import get_user_model
 
 
-def profile_context_processor(request):
-    profile = None
-    if request.user.is_authenticated:
-        try:
-            profile = Profile.objects.get(username=request.user)
-        except Profile.DoesNotExist:
-            pass
-    return {'profile': profile}
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth import get_user_model
+from .models import Profile
+
+@receiver(post_save, sender=get_user_model())
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(username=instance)
 
 def profile_view(request, username):
-    user = get_object_or_404(CustomUser, username=username)
-    profile = get_object_or_404(Profile, username=username)
+    User = get_user_model()
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, username_id=user)
     context = {'profile': profile}
     return render(request, 'profiles/profile.html', context)
-
-def user_profile_view(request, username):
-    user = get_object_or_404(CustomUser, username=username)
-    profile = Profile.objects.get(user=user)
-    context = {'user': user, 'profile': profile}
-    return render(request, 'profile.html', context)
