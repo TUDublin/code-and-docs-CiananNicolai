@@ -1,0 +1,112 @@
+import unittest
+from django.test import Client, TestCase
+from django.urls import reverse
+from django.contrib.auth.models import Group
+from django.contrib.auth import authenticate, login, logout
+from .forms import CustomUserCreationForm
+from .models import CustomUser
+
+# python manage.py test myapp.tests.HomeTestCase
+
+class HomeTestCase(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_my_view(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+
+# python manage.py test myapp.tests.SignupViewTestCase
+
+class SignupViewTestCase(TestCase):
+
+    def test_signup_view(self):
+        # create a test client
+        client = Client()
+
+        # create form data
+        data = {
+            'username': 'testuser',
+            'password1': 'testpassword123',
+            'password2': 'testpassword123',
+            'email': 'testuser@example.com',
+            'first_name': 'Test',
+            'last_name': 'User'
+        }
+
+        # make a POST request to the view with the form data
+        response = client.post(reverse('signup'), data)
+
+        # check that the response status code is 302 (redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # check that a new user has been created
+        self.assertTrue(CustomUser.objects.filter(username='testuser').exists())
+
+        # check that the new user has been added to the "Customer" group
+        customer_group = Group.objects.get(name='Customer')
+        self.assertTrue(customer_group.user_set.filter(username='testuser').exists())
+
+# python manage.py test myapp.tests.SignoutViewTestCase
+
+class SignoutViewTestCase(TestCase):
+
+    def setUp(self):
+        # create a test client and a test user
+        self.client = Client()
+        self.user = CustomUser.objects.create_user(
+            username='testuser',
+            password='testpassword'
+        )
+
+    def test_signout_view(self):
+        # log in the test user
+        self.client.login(username='testuser', password='testpassword')
+
+        # make a GET request to the signout view
+        response = self.client.get(reverse('signout'))
+
+        # check that the response status code is 302 (redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # check that the user is no longer authenticated
+        user = authenticate(username='testuser', password='testpassword')
+        self.assertIsNone(user)
+
+        # check that the user has been redirected to the signin page
+        self.assertRedirects(response, reverse('signin'))
+    
+
+class SigninViewTestCase(TestCase):
+
+    def setUp(self):
+        # create a test client and a test user
+        self.client = Client()
+        self.user = CustomUser.objects.create_user(
+            username='testuser',
+            password='testpassword'
+        )
+
+    def test_signin_view(self):
+        # send a POST request with valid login credentials
+        response = self.client.post(reverse('signin'), {
+            'username': 'testuser',
+            'password': 'testpassword'
+        })
+
+        # check that the response status code is 302 (redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # check that the user is authenticated
+        user = authenticate(username='testuser', password='testpassword')
+        self.assertIsNotNone(user)
+        self.assertEqual(user, self.user)
+
+        # check that the user has been redirected to the post_history page
+        self.assertRedirects(response, reverse('pages:post_history'))
+
+
+
+if __name__ == '__main__':
+    unittest.main()
