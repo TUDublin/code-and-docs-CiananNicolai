@@ -3,7 +3,7 @@ django-appconf==1.0.4
 django-crispy-forms==1.12.0
 google-auth==1.35.0
 google-auth-oauthlib==0.4.6
-Pillow==8.3.2
+Pillow==9.2.0
 django-user-agents==0.4.0
 django_fastdev==1.7.3
 geoip2==4.6.0
