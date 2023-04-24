@@ -24,4 +24,18 @@ class UserPostFormWithLocation(UserPostForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('image', 'comment')
+        exclude = ( 'post', 'author', 'likes', 'postTime', 'edited', 'status',)
+    
+    def __init__(self, *args, **kwargs):
+        self.post = kwargs.pop('post')
+        self.author = kwargs.pop('author')
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.post = self.post
+        instance.author = self.author
+        instance.id = self.post.id
+        if commit:
+            instance.save()
+        return instance

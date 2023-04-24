@@ -82,6 +82,9 @@ class Comment(models.Model):
     edited = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     status = models.IntegerField(choices=STATUS, default=0)
 
+    class Meta:
+        ordering = ('-postTime',)
+
     def str(self):
         return self.comment
 

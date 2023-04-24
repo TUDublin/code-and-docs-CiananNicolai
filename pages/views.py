@@ -97,12 +97,15 @@ def viewPost(request, comment_id):
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
-    fields = ('image', 'comment')
-    template_name = 'comment_detail.html'
+    fields = ('comment', 'image')
+    template_name = 'comment_create.html'
     success_url = reverse_lazy('pages:post_history')
 
     def form_valid(self, form):
-        form.instance.username = self.request.user
+        form.instance.author = self.request.user
+        post_id = self.kwargs.get('post_id')
+        form.instance.post = UserPost.objects.get(id=post_id)
+
         return super().form_valid(form)
 
 def postComment():

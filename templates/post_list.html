@@ -24,18 +24,19 @@
               <button type="submit" class="btn btn-primary">Reposts 0</button>
             </div>
             <div class="col">
-              <button type="submit" class="btn btn-primary">Comments 0</button>
+              <button type="submit" class="btn btn-primary"> <a href="{% url 'pages:comment_create' post_id=post.pk %}">Comments 0</a></button>
             </div>
           </div>
         </div>
 
         {% if post.comments.all %}
-          {% for comment in post.comments.all %}
-            <p>{{ comment.comment }}</p>
-          {% endfor %}
+        {% for comment in post.comments.all %}
+          <p>{{ comment.comment }}</p>
+        {% endfor %}
         {% else %}
           <p>No comments yet.</p>
         {% endif %}
+      
   
       </div>
     </div>
