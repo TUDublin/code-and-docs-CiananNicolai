@@ -73,10 +73,11 @@ class Comment(models.Model):
         default=uuid.uuid4,
         editable=False
     )
+    post = models.ForeignKey(UserPost, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     comment = models.TextField(max_length=250)
     image = models.ImageField(upload_to="userPost", blank=True)
     likes = models.DecimalField(blank=True,max_digits=9999999,decimal_places=0, null=True)
-    username = models.ForeignKey(UserPost,on_delete = models.CASCADE, related_name='comments')
     postTime = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     edited = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     status = models.IntegerField(choices=STATUS, default=0)
@@ -85,4 +86,4 @@ class Comment(models.Model):
         return self.comment
 
     def get_absolute_url(self):
-        return reverse('pages:post_history', args=[str(self.part.id)])
+        return reverse('pages:post_history', args=[str(self.post.id)])

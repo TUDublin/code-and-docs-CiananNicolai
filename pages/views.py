@@ -108,7 +108,16 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 def postComment():
      comments = comments.all()
 
+class PostDetailView(DetailView):
+    model = UserPost
+    template_name = 'comment_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        comments = post.comments.all()
+        context['comments'] = comments
+        return context
 
 
 

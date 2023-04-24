@@ -8,8 +8,8 @@ from django.shortcuts import redirect
 
 class Profile(models.Model):
     username = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=300, blank=True)
-    location = models.CharField(max_length=30, blank=True)
+    bio = models.TextField(max_length=300, blank=True ,default="Nothing yet!")
+    location = models.CharField(max_length=30, blank=True , default="Unknown")
 
     def __str__(self):
         return self.bio

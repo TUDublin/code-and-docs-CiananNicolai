@@ -8,15 +8,35 @@
   <div class="card w-50 p-3 ">
     <img class="card-img-top" src="..." alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title"><a href="{% url 'profiles:profile_view' username=post.username %}">{{post.username}}</h5>
-      <p class="card-text">{{post.text}} {{post.latitude}}</p>
+      <div></div>
+      <h5 class="card-title"><a href="{% url 'profiles:profile_view' username=post.username %}" style="text-decoration:none;">{{post.username}}</a></h5>
+      <p class="card-text">{{post.text}}</p>
       <div class="card-footer">
-        <form action="{% url 'pages:like_post' post.pk %}" method="post">
-          {% csrf_token %}
+        <div class="container text-center">
+          <div class="row">
+            <div class="col">
+              <form action="{% url 'pages:like_post' post.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Likes {{post.likes|default:"0"}}</button>
+              </form>
+            </div>
+            <div class="col">
+              <button type="submit" class="btn btn-primary">Reposts 0</button>
+            </div>
+            <div class="col">
+              <button type="submit" class="btn btn-primary">Comments 0</button>
+            </div>
+          </div>
+        </div>
 
-          <button type="submit" class="btn btn-primary">Like {{post.likes}}</button>
-        </form>
-        <a href="{% url 'pages:like_post' uuid=post.pk %}">View comments ...</a>
+        {% if post.comments.all %}
+          {% for comment in post.comments.all %}
+            <p>{{ comment.comment }}</p>
+          {% endfor %}
+        {% else %}
+          <p>No comments yet.</p>
+        {% endif %}
+  
       </div>
     </div>
   </div>
@@ -61,3 +81,4 @@
     }
   }
 </script>
+

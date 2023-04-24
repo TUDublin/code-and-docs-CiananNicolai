@@ -1,29 +1,3 @@
-.errorlist li {
-	color: red;
-	font-weight: bold;
-}
-.my_custom_div {
-	margin-bottom: 20px !important;
-}
-
-.my_top_navbar_div {
-	height: 60px;
-	line-height: 50px;
-}
-.my_custom_menu {
-	text-align: right !important;
-}
-.my_custom_menu ul li {
-	list-style: none;
-	color: #000;
-	padding-right: 20px;
-}
-.my_custom_menu ul li a {
-	text-decoration: none;
-	color: #000;
-	list-style: none;
-}
-
-.my_custom_div {
-	margin-bottom: 20px !important;
-}
+.card-title a {
+    text-decoration: none;
+  }

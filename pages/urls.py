@@ -30,6 +30,7 @@ urlpatterns = [
     path('comment/',CommentCreateView.as_view(), name='comment_detail'),
     path('post/<uuid:uuid>/like/', like_post, name='like_post'),
     path('history/', views.my_view, name='my_view'),
+    path('<uuid:pk>/', PostDetailView.as_view(), name='comment_list'),
 
     ]
 

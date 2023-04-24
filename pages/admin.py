@@ -13,6 +13,6 @@ class UserPostAdmin(admin.ModelAdmin):
 admin.site.register(UserPost, UserPostAdmin)
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['id','username', 'comment', 'image','likes','postTime','edited']
+    list_display = ['id','author', 'comment', 'image','likes','postTime','edited']
 
 admin.site.register(Comment, CommentAdmin)
