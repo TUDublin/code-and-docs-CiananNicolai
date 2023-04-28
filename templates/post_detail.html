@@ -1,37 +1,40 @@
 {% extends 'base.html' %}
 {% block content %}
-
-  <div class="article-entry">
-    <div class="justify-content-center mx-auto" style="width:800px">
-      <div class="card">
-        <div class="card-header">
-        <div class ="row">
-          <div class="col" >
-          <p>by {{ user.username }} | {{ userpost.postTime }}</p>
+    <div class="article-entry ">
+      <div class="justify-content-center">
+        <div class="card">
+          <div class="card-header">
+          <div class ="row">
+            <div class="col" >
+            <p>by {{ user.username }} | {{ userpost.postTime }}</p>
+            </div>
+            <div class="col-md-2 offset-md-4">
+            <p><a href="{% url 'pages:post_edit' userpost.pk %}">Edit</a>
+              {% if user.username %} |
+              <a href="{% url 'pages:post_delete' userpost.pk %}">Delete</a>
+              {% endif %}
+            </p>
+            </div>
+            </div>
           </div>
-          <div class="col-md-2 offset-md-4">
-          <p><a href="{% url 'pages:post_edit' userpost.pk %}">Edit</a>
-            {% if user.username %} |
-            <a href="{% url 'pages:post_delete' userpost.pk %}">Delete</a>
-            {% endif %}
-          </p>
+          <div class="card-body">
+          {% if userpost.image %}
+          <img class = "post py-1" src="{{userpost.image.url}}" alt="{{ userpost.text }}">
+          {% endif %}
+          <p>{{ userpost.text }}</p>
           </div>
-          </div>
+          <div class="card-footer">
+            <p><a href="#">Comment ...</a></p>
+            {% for comment in comments %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{ comment.author }}</h5>
+                    <p class="card-text">{{ comment.comment }}</p>
+                </div>
+            </div>
+            {% endfor %}
+          <p><a href="{% url 'pages:post_history' %}">Go back ...</a></p>
         </div>
-        <div class="card-body">
-        {% if userpost.image %}
-        <img class = "post py-1" src="{{userpost.image.url}}" alt="{{ userpost.text }}">
-        {% endif %}
-        <p>{{ userpost.text }}</p>
-        </div>
-        <div class="card-footer">
-          <p><a href="{% url 'pages:comment_detail' %}">Comment ...</a></p>
-          {% for comment in userpost.comments.all %}
-          <p>
-            <span class="font-weight-bold">{{ comment.username }} &middot;</span>
-            {{ comment.comment }}
-          </p>
-        {% endfor %}
-      <p><a href="{% url 'pages:post_history' %}">Go back ...</a></p>
+      </div>
     </div>
-    {% endblock content %}
+{% endblock content %}

@@ -1,25 +1,49 @@
 <!-- navbar.html -->
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand display-6" href="{% url 'pages:home' %}">Pages <span class="bi bi-file"></span></a>
-      <button class="navbar-toggler"  type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-       <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'pages:home' %}">Home <span class="bi bi-house"></span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'pages:post_history' %}">Posts <span class="bi bi-newspaper"></span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'pages:post_new' %}">New Post <span class="bi bi-file-plus"></span></a>
-          </li>
-        </ul>
+<div class="container">
+  <div class="row">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
+      <div class="container">
+        <a class="navbar-brand display-6" href="{% url 'pages:home' %}">Pages <span class="bi bi-file"></span></a>
+        <button class="navbar-toggler"  type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
+            <li class="nav-item ">
+              <a class="nav-link" href="{% url 'pages:home' %}">Home <span class="bi bi-house"></span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pages:post_history' %}">Posts <span class="bi bi-newspaper"></span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pages:post_new' %}">New Post <span class="bi bi-file-plus"></span></a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+
+    <!-- Add a new navbar underneath the existing one -->
+    <nav class="navbar navbar-expand-lg navbar-light border-bottom border-primary">
+      <div class="container d-flex justify-content-center">
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+          <ul class="navbar-nav flex-fill">
+            <li class="nav-item flex-grow-1">
+              <a class="nav-link text-center" href="#">For you</a>
+            </li>
+            <li class="nav-item flex-grow-1">
+              <a class="nav-link text-center" href="#">Following</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
 

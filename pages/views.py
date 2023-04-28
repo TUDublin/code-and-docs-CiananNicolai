@@ -33,6 +33,13 @@ class PostDetailView(LoginRequiredMixin, DetailView):
     model = UserPost
     template_name = 'post_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        comments = post.comments.all()
+        context['comments'] = comments
+        return context
+
 class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
     model = UserPost
     fields = ('image', 'text',)
@@ -113,7 +120,7 @@ def postComment():
 
 class PostDetailView(DetailView):
     model = UserPost
-    template_name = 'comment_list.html'
+    template_name = 'post_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

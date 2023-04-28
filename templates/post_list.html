@@ -4,9 +4,11 @@
 <input type="hidden" name="latitude" id="id_latitude">
 <input type="hidden" name="longitude" id="id_longitude">
   {% for post in post_list %}
-  <div  class="col d-flex justify-content-center">
-  <div class="card w-50 p-3 ">
-    <img class="card-img-top" src="..." alt="Card image cap">
+  <div  class="col d-flex justify-content-center my-4">
+  <div class="card w-70 p-3 ">
+    {% if post.image %}
+      <img class="card-img-top" src="{{post.image.url}}" alt="Card image cap">
+    {% endif %}
     <div class="card-body">
       <div></div>
       <h5 class="card-title"><a href="{% url 'profiles:profile_view' username=post.username %}" style="text-decoration:none;">{{post.username}}</a></h5>
@@ -21,17 +23,23 @@
               </form>
             </div>
             <div class="col">
-              <button type="submit" class="btn btn-primary">Reposts 0</button>
+              <button type="submit" class="btn btn-primary">Repost 0</button>
             </div>
             <div class="col">
-              <button type="submit" class="btn btn-primary"> <a href="{% url 'pages:comment_create' post_id=post.pk %}">Comments 0</a></button>
+              <button type="submit" class="btn btn-primary" > <a href="{% url 'pages:post_detail' post.pk %} "style="text-decoration: none; color: inherit;" >Comments 0</a></button>
             </div>
           </div>
         </div>
+        
 
         {% if post.comments.all %}
-        {% for comment in post.comments.all %}
-          <p>{{ comment.comment }}</p>
+        {% for comment in comments %}
+          <div class="card mb-2">
+              <div class="card-body">
+                  <h5 class="card-title">{{ comment.author }}</h5>
+                  <p class="card-text">{{ comment.comment }}</p>
+              </div>
+          </div>
         {% endfor %}
         {% else %}
           <p>No comments yet.</p>
