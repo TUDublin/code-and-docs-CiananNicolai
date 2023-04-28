@@ -1,3 +1,8 @@
 .card-title a {
     text-decoration: none;
   }
+
+.padding-0{
+  padding-right:0;
+  padding-left:0;
+}
