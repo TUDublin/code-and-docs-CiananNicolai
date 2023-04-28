@@ -5,13 +5,19 @@
 <input type="hidden" name="longitude" id="id_longitude">
   {% for post in post_list %}
   <div  class="col d-flex justify-content-center my-4">
-  <div class="card w-70 p-3 ">
+  <div class="card w-80 p- ">
     {% if post.image %}
       <img class="card-img-top" src="{{post.image.url}}" alt="Card image cap">
     {% endif %}
     <div class="card-body">
-      <div></div>
-      <h5 class="card-title"><a href="{% url 'profiles:profile_view' username=post.username %}" style="text-decoration:none;">{{post.username}}</a></h5>
+      <div class="row">
+        <div class="col align-self-start">
+          <img class="rounded-circle" src="{{ user.avatar.url }}" alt="{{ user.username }}" width="60px" height="60px">
+        </div>
+        <div class="col text-left">
+          <h5 class="card-title"><a href="{% url 'profiles:profile_view' username=post.username %}" style="text-decoration:none;">{{post.username}}</a></h5>
+        </div>
+      </div>
       <p class="card-text">{{post.text}}</p>
       <div class="card-footer">
         <div class="container text-center">
@@ -19,19 +25,17 @@
             <div class="col">
               <form action="{% url 'pages:like_post' post.pk %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Likes {{post.likes|default:"0"}}</button>
+                <button type="submit" class="btn btn-light">Likes {{post.likes|default:"0"}}</button>
               </form>
             </div>
             <div class="col">
-              <button type="submit" class="btn btn-primary">Repost 0</button>
+              <button type="submit" class="btn btn-light">Repost 0</button>
             </div>
             <div class="col">
-              <button type="submit" class="btn btn-primary" > <a href="{% url 'pages:post_detail' post.pk %} "style="text-decoration: none; color: inherit;" >Comments 0</a></button>
+              <button type="submit" class="btn btn-light" > <a href="{% url 'pages:post_detail' post.pk %} "style="text-decoration: none; color: inherit;" >Comments 0</a></button>
             </div>
           </div>
         </div>
-        
-
         {% if post.comments.all %}
         {% for comment in comments %}
           <div class="card mb-2">
@@ -44,8 +48,6 @@
         {% else %}
           <p>No comments yet.</p>
         {% endif %}
-      
-  
       </div>
     </div>
   </div>
