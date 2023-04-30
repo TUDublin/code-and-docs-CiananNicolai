@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Articles{% endblock title %}
 {% block content %}
+{% if user.is_authenticated %}
 <input type="hidden" name="latitude" id="id_latitude">
 <input type="hidden" name="longitude" id="id_longitude">
   {% for post in post_list %}
@@ -36,24 +37,16 @@
             </div>
           </div>
         </div>
-        {% if post.comments.all %}
-        {% for comment in comments %}
-          <div class="card mb-2">
-              <div class="card-body">
-                  <h5 class="card-title">{{ comment.author }}</h5>
-                  <p class="card-text">{{ comment.comment }}</p>
-              </div>
-          </div>
-        {% endfor %}
-        {% else %}
-          <p>No comments yet.</p>
-        {% endif %}
+
       </div>
     </div>
   </div>
   </div>
 
   {% endfor %}
+{% else %}
+  <p class="col d-flex justify-content-center my-4">You must be logged in to view posts.</p>
+{% endif %}
 {% endblock %}
 
 <script>

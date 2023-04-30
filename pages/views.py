@@ -25,6 +25,8 @@ logger = logging.getLogger(__name__)
 class HomePageView(TemplateView):
     template_name = 'home.html' 
 
+# Posts
+
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = UserPost
     template_name = 'post_detail.html'
@@ -56,6 +58,7 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
     
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = UserPost
+    # The form used to create the post is UserPostFormWithLocation
     form_class = UserPostFormWithLocation
     template_name = 'post_new.html'
     success_url = reverse_lazy(post_history)
@@ -71,6 +74,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         post.username = self.request.user
         post.save()
         return super().form_valid(form)
+    
+    # Get the user location on creation
 
     def get_user_location(self):
         try:
@@ -92,11 +97,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             kwargs['initial'] = {'use_geo': True}
         return kwargs
 
+# This function is a view that displays a post and its comments
 def view_post(request, comment_id):
     if request.user.is_authenticated:
         posts = UserPost.objects.get(id=comment_id)
         post_items = Comment.objects.all
     return render(request, 'post/post_detail.html', {'post':posts, 'post_items':post_items})
+
+# Comments are related content
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
@@ -153,7 +161,7 @@ def my_view(request):
 
     elif request.method == 'GET':
         # Get the user's IP address
-        user_ip = "92.251.255.11"
+        user_ip = "82.141.251.28"
         url = f'http://ipinfo.io/{user_ip}/json'
         with urllib.request.urlopen(url) as response:
             data = json.loads(response.read().decode())
