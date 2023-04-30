@@ -3,19 +3,21 @@
 {% block content %}
 <body onload="getLocation()">
 
-<div class="card">
-  <div class="card-header">
-  <h1>New post</h1>
-</div>
-<div class="card-body">
-  <form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form|crispy}}
+  <div class="card mx-auto" style="width:500px">
+    <div class="card-header">
+      <h1>New post</h1>
+    </div>
+    <div class="card-body">
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy}}
+      </form>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary ml-2" type="submit" href="{% url 'pages:post_history' %}">Post</button>
+    </div>
   </div>
-  <div class="card-footer">
-    <button class="btn btn-primary ml-2" type="submit" href="{% url 'pages:post_history' %}">Save</button>
-  </form>
-</div>
+  
 <script>
   function getLocation() {
     if (navigator.geolocation) {

@@ -10,7 +10,7 @@ from django.contrib.gis.geoip2 import GeoIP2
 from math import radians, sin, cos, sqrt, atan2
 import logging
 import urllib.request, json, pandas as pd
-from django.http import JsonResponse
+from django.http import HttpResponseNotAllowed
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -18,16 +18,12 @@ from django.contrib import messages
 from profiles.models import Profile
 from profiles.views import Profile
 
-
+post_history ="pages:post_history"
 
 logger = logging.getLogger(__name__)
 
 class HomePageView(TemplateView):
     template_name = 'home.html' 
-
-# def postHistory(request):
-#     post_details = UserPost.objects.all
-#     return render(request,'post_list.html',{'post_details': post_details})
 
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = UserPost
@@ -52,7 +48,7 @@ class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
 class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
     model = UserPost
     template_name = 'post_delete.html'
-    success_url = reverse_lazy('pages:post_history')
+    success_url = reverse_lazy(post_history)
 
     def test_func(self):
         obj = self.get_object()
@@ -62,7 +58,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = UserPost
     form_class = UserPostFormWithLocation
     template_name = 'post_new.html'
-    success_url = reverse_lazy('pages:post_history')
+    success_url = reverse_lazy(post_history)
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -72,7 +68,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
                 post.latitude, post.longitude = location
             else:
                 messages.warning(self.request, 'Could not determine your location.')
-        form.instance.username = self.request.user
+        post.username = self.request.user
         post.save()
         return super().form_valid(form)
 
@@ -96,7 +92,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             kwargs['initial'] = {'use_geo': True}
         return kwargs
 
-def viewPost(request, comment_id):
+def view_post(request, comment_id):
     if request.user.is_authenticated:
         posts = UserPost.objects.get(id=comment_id)
         post_items = Comment.objects.all
@@ -115,7 +111,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
         return super().form_valid(form)
 
-def postComment():
+def post_comment():
      comments = comments.all()
 
 class PostDetailView(DetailView):
@@ -132,7 +128,6 @@ class PostDetailView(DetailView):
 
 
 def my_view(request):
-    logger.critical("test", request.GET)
     radius = 15 # km
     visible_posts = []
     
@@ -202,14 +197,12 @@ def like_post(request, uuid):
     post = get_object_or_404(UserPost, id=uuid)
     try:
         like = PostLike.objects.create(user=request.user, post=post)
-        liked = True
     except IntegrityError:
         # the user has already liked this post
         like = PostLike.objects.get(user=request.user, post=post)
         like.delete()
-        liked = False
 
     post.likes = post.postlike_set.count()
     post.save()
 
-    return redirect(reverse('pages:post_history'))
+    return redirect(reverse(post_history))

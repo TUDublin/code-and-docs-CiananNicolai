@@ -2,13 +2,20 @@ from django import forms
 from .models import UserPost, Comment
 
 class UserPostForm(forms.ModelForm):
+    use_geo = forms.BooleanField(initial=True, widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = UserPost
-        fields = ('text', 'image', 'latitude', 'longitude','posttype')
+        fields = ('text', 'image', 'latitude', 'longitude', 'posttype')
         widgets = {
             'latitude': forms.HiddenInput(),
             'longitude': forms.HiddenInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial['posttype'] = 'userpost'
+
 
 class UserPostFormWithLocation(UserPostForm):
     use_geo = forms.BooleanField(required=False)
